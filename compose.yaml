@@ -1,0 +1,19 @@
+version: '3'
+services:
+  flyway:
+    image: flyway/flyway:9.22.1
+    container_name: "flyway-migration"
+    command: -user=postgres -password=postgres -url="jdbc:postgresql://postgres:5432/postgres" -locations=filesystem:/flyway/migration -connectRetries=5 migrate
+    volumes:
+      - ./db/migration:/flyway/migration
+    depends_on:
+      - postgres
+  postgres:
+    image: 'postgres:15'
+    container_name: "postgres"
+    environment:
+      - 'POSTGRES_DB=postgres'
+      - 'POSTGRES_PASSWORD=postgres'
+      - 'POSTGRES_USER=postgres'
+    ports:
+      - '5432:5432'
